@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { format, isValid } from "date-fns";
+import { isValid } from "date-fns";
 import { Archive, ArchiveRestore } from "lucide-react";
 import {
   ShowBase,
@@ -28,6 +28,7 @@ import { useConfigurationContext } from "../root/ConfigurationContext";
 import type { Deal } from "../types";
 import { ContactList } from "./ContactList";
 import { findDealLabel } from "./deal";
+import { formatISODateString } from "./dealUtils";
 
 export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
   const redirect = useRedirect();
@@ -95,7 +96,7 @@ const DealShowContent = () => {
               <div className="flex items-center gap-2">
                 <span className="text-sm">
                   {isValid(new Date(record.expected_closing_date))
-                    ? format(new Date(record.expected_closing_date), "PP")
+                    ? formatISODateString(record.expected_closing_date)
                     : translate("crm.common.invalid_date", {
                         _: "Invalid date",
                       })}

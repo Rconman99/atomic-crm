@@ -125,7 +125,7 @@ export const Task = ({
             <div className="text-sm text-muted-foreground">
               {translate("resources.tasks.fields.due_short", { _: "due" })}
               &nbsp;
-              <DateField source="due_date" record={task} />
+              <DateField source="due_date" record={task} showDate showTime />
               {showContact && (
                 <ReferenceField<TData, Contact>
                   source="contact_id"

@@ -65,6 +65,7 @@ export const NoteInputs = ({
             }
             helperText={false}
             validate={required()}
+            modal
           />
         </ReferenceInput>
       )}
