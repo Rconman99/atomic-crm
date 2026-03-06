@@ -337,6 +337,17 @@ const lifeCycleCallbacks: ResourceCallbacks[] = [
       return applyFullTextSearch(["name", "category", "description"])(params);
     },
   },
+  {
+    resource: "leads",
+    beforeGetList: async (params) => {
+      return applyFullTextSearch([
+        "first_name",
+        "last_name",
+        "company_name",
+        "email",
+      ])(params);
+    },
+  },
 ];
 
 export const dataProvider = withLifecycleCallbacks(

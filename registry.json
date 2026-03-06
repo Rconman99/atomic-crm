@@ -420,6 +420,10 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/misc/CrmErrorBoundary.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/misc/CreateSheet.tsx",
           "type": "registry:component"
         },
@@ -460,6 +464,14 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/atomic-crm/leads/leadStatuses.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/leads/LeadScoreBadge.tsx",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/atomic-crm/layout/TopToolbar.tsx",
           "type": "registry:component"
         },
@@ -489,6 +501,10 @@
         },
         {
           "path": "src/components/atomic-crm/layout/FormToolbar.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/atomic-crm/invoices/invoiceCalculations.ts",
           "type": "registry:component"
         },
         {

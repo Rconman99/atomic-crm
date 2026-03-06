@@ -215,6 +215,48 @@ export interface LabeledValue {
   label: string;
 }
 
+export type Lead = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  company_name: string;
+  job_title: string;
+  linkedin_url: string;
+  source: string;
+  source_detail: string;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_term: string;
+  utm_content: string;
+  landing_page_url: string;
+  referrer_url: string;
+  lead_score: number;
+  status: string;
+  qualification_notes: string;
+  sales_id: Identifier;
+  assigned_at: string;
+  converted_at: string;
+  converted_contact_id: Identifier;
+  converted_deal_id: Identifier;
+  tags: Identifier[];
+  notes: string;
+  custom_fields: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+} & Pick<RaRecord, "id">;
+
+export type LeadActivity = {
+  lead_id: Identifier;
+  sales_id: Identifier;
+  activity_type: string;
+  description: string;
+  metadata: Record<string, any>;
+  score_delta: number;
+  created_at: string;
+} & Pick<RaRecord, "id">;
+
 export type DealStage = LabeledValue;
 
 export interface NoteStatus extends LabeledValue {

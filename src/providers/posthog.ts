@@ -50,6 +50,20 @@ export const analytics = {
     posthog.capture('invoice_paid', data);
   },
 
+  // Lead events
+  leadCreated: (data: { source: string; utm_source: string }) => {
+    posthog.capture('lead_created', data);
+  },
+  leadStatusChanged: (data: { from_status: string; to_status: string }) => {
+    posthog.capture('lead_status_changed', data);
+  },
+  leadConverted: (data: { lead_id: number; contact_id: number; deal_id: number | null; time_to_convert_days: number }) => {
+    posthog.capture('lead_converted', data);
+  },
+  leadScoreChanged: (data: { old_score: number; new_score: number; activity_type: string }) => {
+    posthog.capture('lead_score_changed', data);
+  },
+
   // User identification
   identifyUser: (userId: string, traits: Record<string, any>) => {
     posthog.identify(userId, traits);

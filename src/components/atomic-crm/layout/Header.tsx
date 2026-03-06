@@ -2,6 +2,7 @@ import {
   BarChart3,
   Building2,
   FileText,
+  Filter,
   FolderKanban,
   Home,
   Import,
@@ -64,6 +65,12 @@ const Header = () => {
           icon={<Home className="w-[18px] h-[18px]" />}
           label="Dashboard"
           active={isActive("/")}
+        />
+        <SidebarNavItem
+          to="/leads"
+          icon={<Filter className="w-[18px] h-[18px]" />}
+          label="Leads"
+          active={isActive("/leads")}
         />
         <SidebarNavItem
           to="/contacts"
