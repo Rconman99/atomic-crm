@@ -3,6 +3,7 @@ import {
   Building2,
   FileText,
   FolderKanban,
+  Funnel,
   Handshake,
   LayoutDashboard,
   Settings,
@@ -16,6 +17,7 @@ import { ThemeModeToggle } from "@/components/admin/theme-mode-toggle";
 
 const navItems = [
   { label: "Dashboard", to: "/", icon: LayoutDashboard, match: "/" },
+  { label: "Leads", to: "/leads", icon: Funnel, match: "/leads/*" },
   { label: "Contacts", to: "/contacts", icon: Users, match: "/contacts/*" },
   {
     label: "Companies",

@@ -214,6 +214,22 @@ const dataProviderWithCustomMethods = {
 
     return data;
   },
+  async convertLead(
+    leadId: Identifier,
+    dealName?: string,
+    dealAmount?: number,
+  ) {
+    const { data, error } = await supabase.rpc("convert_lead_to_contact", {
+      p_lead_id: leadId,
+      p_deal_name: dealName ?? null,
+      p_deal_amount: dealAmount ?? null,
+    });
+    if (error) {
+      console.error("convertLead.error", error);
+      throw new Error(error.message || "Failed to convert lead");
+    }
+    return data;
+  },
   async getConfiguration(): Promise<ConfigurationContextValue> {
     const { data } = await baseDataProvider.getOne("configuration", { id: 1 });
     return (data?.config as ConfigurationContextValue) ?? {};

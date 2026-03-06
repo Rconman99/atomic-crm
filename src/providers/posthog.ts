@@ -91,6 +91,29 @@ export const analytics = {
 
   invoicePaid: (data: { amount: number; daysToPay: number }) =>
     capture("invoice_paid", data),
+
+  leadCreated: (data: { source: string; utm_source?: string }) =>
+    capture("lead_created", data),
+
+  leadStatusChanged: (data: {
+    leadId: number;
+    from: string;
+    to: string;
+  }) => capture("lead_status_changed", data),
+
+  leadConverted: (data: {
+    leadId: number;
+    contactId: number;
+    dealId?: number;
+    timeToConvertDays: number;
+  }) => capture("lead_converted", data),
+
+  leadScoreChanged: (data: {
+    leadId: number;
+    oldScore: number;
+    newScore: number;
+    activityType: string;
+  }) => capture("lead_score_changed", data),
 };
 
 export default posthog;
