@@ -13,6 +13,9 @@ DECLARE
 BEGIN
   SELECT * INTO v_lead FROM leads WHERE id = p_lead_id;
   IF NOT FOUND THEN RAISE EXCEPTION 'Lead not found'; END IF;
+  IF v_lead.sales_id != (SELECT id FROM sales WHERE user_id = auth.uid()) THEN
+    RAISE EXCEPTION 'Unauthorized: lead does not belong to current user';
+  END IF;
   IF v_lead.status = 'converted' THEN RAISE EXCEPTION 'Lead already converted'; END IF;
 
   -- Find or create company
