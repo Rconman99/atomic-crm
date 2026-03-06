@@ -6,6 +6,7 @@ import { List } from "@/components/admin/list";
 import { ListPagination } from "@/components/admin/list-pagination";
 import { SortButton } from "@/components/admin/sort-button";
 import { Badge } from "@/components/ui/badge";
+import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
 import { TopToolbar } from "../layout/TopToolbar";
 import type { Invoice } from "../types";
 
@@ -22,15 +23,17 @@ export const InvoiceList = () => {
   const { identity } = useGetIdentity();
   if (!identity) return null;
   return (
-    <List
-      title={false}
-      perPage={25}
-      sort={{ field: "created_at", order: "DESC" }}
-      actions={<InvoiceListActions />}
-      pagination={<ListPagination rowsPerPageOptions={[10, 25, 50]} />}
-    >
-      <InvoiceListContent />
-    </List>
+    <ResourceErrorBoundary>
+      <List
+        title={false}
+        perPage={25}
+        sort={{ field: "created_at", order: "DESC" }}
+        actions={<InvoiceListActions />}
+        pagination={<ListPagination rowsPerPageOptions={[10, 25, 50]} />}
+      >
+        <InvoiceListContent />
+      </List>
+    </ResourceErrorBoundary>
   );
 };
 

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useGetList } from "ra-core";
 
+import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
 import type { Contact, ContactNote, Deal } from "../types";
 import { DashboardActivityLog } from "./DashboardActivityLog";
 import { DashboardStepper } from "./DashboardStepper";
@@ -66,6 +67,7 @@ export const Dashboard = () => {
       .reduce((sum, d) => sum + (d.amount || 0), 0) ?? 0;
 
   return (
+    <ResourceErrorBoundary>
     <div className="space-y-6 mt-1">
       {/* Metric Cards Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -125,5 +127,6 @@ export const Dashboard = () => {
         </div>
       </div>
     </div>
+    </ResourceErrorBoundary>
   );
 };

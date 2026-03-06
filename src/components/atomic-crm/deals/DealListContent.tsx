@@ -3,6 +3,7 @@ import isEqual from "lodash/isEqual";
 import { useDataProvider, useListContext, type DataProvider } from "ra-core";
 import { useEffect, useState } from "react";
 
+import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import type { Deal } from "../types";
 import { DealColumn } from "./DealColumn";
@@ -71,17 +72,19 @@ export const DealListContent = () => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex gap-4">
-        {dealStages.map((stage) => (
-          <DealColumn
-            stage={stage.value}
-            deals={dealsByStage[stage.value]}
-            key={stage.value}
-          />
-        ))}
-      </div>
-    </DragDropContext>
+    <ResourceErrorBoundary>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="flex gap-4">
+          {dealStages.map((stage) => (
+            <DealColumn
+              stage={stage.value}
+              deals={dealsByStage[stage.value]}
+              key={stage.value}
+            />
+          ))}
+        </div>
+      </DragDropContext>
+    </ResourceErrorBoundary>
   );
 };
 
