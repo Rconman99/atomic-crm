@@ -90,15 +90,21 @@ export const AttributionDashboard = () => {
           </TabsList>
 
           <TabsContent value="channels" className="mt-6">
-            <ChannelPerformance attributionModel={attributionModel} sinceDate={sinceDate} />
+            <CrmErrorBoundary fallbackTitle="Channel performance failed to load">
+              <ChannelPerformance attributionModel={attributionModel} sinceDate={sinceDate} />
+            </CrmErrorBoundary>
           </TabsContent>
 
           <TabsContent value="sources" className="mt-6">
-            <LeadSourceAnalytics sinceDate={sinceDate} />
+            <CrmErrorBoundary fallbackTitle="Lead source analytics failed to load">
+              <LeadSourceAnalytics sinceDate={sinceDate} />
+            </CrmErrorBoundary>
           </TabsContent>
 
           <TabsContent value="journeys" className="mt-6">
-            <CustomerJourneyTimeline sinceDate={sinceDate} />
+            <CrmErrorBoundary fallbackTitle="Customer journeys failed to load">
+              <CustomerJourneyTimeline sinceDate={sinceDate} />
+            </CrmErrorBoundary>
           </TabsContent>
         </Tabs>
       </CrmErrorBoundary>

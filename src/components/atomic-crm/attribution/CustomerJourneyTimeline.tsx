@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import { analytics } from "@/providers/posthog";
+import { CrmErrorBoundary } from "../misc/CrmErrorBoundary";
 import { leadSources } from "../leads/leadStatuses";
 import { channelColors, channelLabel } from "./channelColors";
 import { TouchpointTimeline, type Touchpoint } from "./TouchpointTimeline";
@@ -227,7 +228,9 @@ const JourneyCard = ({ journey }: { journey: JourneyRow }) => {
         {/* Expanded touchpoint timeline */}
         {expanded && (
           <div className="mt-3 pt-3 border-t border-border">
-            <TouchpointDetails leadId={journey.lead_id} contactId={journey.contact_id} />
+            <CrmErrorBoundary fallbackTitle="Touchpoint timeline failed to load">
+              <TouchpointDetails leadId={journey.lead_id} contactId={journey.contact_id} />
+            </CrmErrorBoundary>
           </div>
         )}
       </CardContent>

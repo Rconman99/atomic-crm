@@ -49,6 +49,7 @@ import {
 import { Link } from "react-router";
 
 import { analytics } from "@/providers/posthog";
+import { CrmErrorBoundary } from "../misc/CrmErrorBoundary";
 import type { Lead, LeadActivity } from "../types";
 import { TouchpointTimeline, type Touchpoint } from "../attribution/TouchpointTimeline";
 import { LeadScoreBadge } from "./LeadScoreBadge";
@@ -62,7 +63,9 @@ import {
 export const LeadShow = () => {
   return (
     <ShowBase>
-      <LeadShowContent />
+      <CrmErrorBoundary fallbackTitle="Lead details failed to load">
+        <LeadShowContent />
+      </CrmErrorBoundary>
     </ShowBase>
   );
 };

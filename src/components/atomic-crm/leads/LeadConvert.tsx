@@ -15,6 +15,7 @@ import { Loader2 } from "lucide-react";
 
 import { supabase } from "../providers/supabase/supabase";
 import { analytics } from "@/providers/posthog";
+import { CrmErrorBoundary } from "../misc/CrmErrorBoundary";
 import type { Lead } from "../types";
 
 export const LeadConvert = ({
@@ -68,6 +69,7 @@ export const LeadConvert = ({
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="sm:max-w-md">
+        <CrmErrorBoundary fallbackTitle="Conversion form failed to load">
         <DialogHeader>
           <DialogTitle>Convert Lead to Contact</DialogTitle>
         </DialogHeader>
@@ -132,6 +134,7 @@ export const LeadConvert = ({
             Convert to Contact
           </Button>
         </DialogFooter>
+        </CrmErrorBoundary>
       </DialogContent>
     </Dialog>
   );

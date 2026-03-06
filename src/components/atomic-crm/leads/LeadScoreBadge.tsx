@@ -1,4 +1,4 @@
-const getScoreConfig = (score: number) => {
+export const getScoreConfig = (score: number) => {
   if (score >= 76) return { bg: "rgba(76, 175, 80, 0.12)", text: "#4CAF50", label: "Hot" };
   if (score >= 51) return { bg: "rgba(255, 152, 0, 0.12)", text: "#FF9800", label: "Warm" };
   if (score >= 21) return { bg: "rgba(33, 150, 243, 0.12)", text: "#2196F3", label: "Warming" };
