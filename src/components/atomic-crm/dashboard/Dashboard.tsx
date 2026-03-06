@@ -13,7 +13,9 @@ import { DashboardActivityLog } from "./DashboardActivityLog";
 import { DashboardStepper } from "./DashboardStepper";
 import { DealsChart } from "./DealsChart";
 import { HotContacts } from "./HotContacts";
+import { LeadPipelineCard } from "./LeadPipelineCard";
 import { TasksList } from "./TasksList";
+import { TopChannelsCard } from "./TopChannelsCard";
 import { Welcome } from "./Welcome";
 
 const MetricCard = ({
@@ -139,6 +141,8 @@ export const Dashboard = () => {
           <div className="md:col-span-3">
             <div className="flex flex-col gap-4">
               <HotContacts />
+              <LeadPipelineCard />
+              <TopChannelsCard />
             </div>
           </div>
           <div className="md:col-span-6">

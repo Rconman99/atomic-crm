@@ -64,6 +64,17 @@ export const analytics = {
     posthog.capture('lead_score_changed', data);
   },
 
+  // Attribution events
+  attributionDashboardViewed: (data: { tab_name: string }) => {
+    posthog.capture('attribution_dashboard_viewed', data);
+  },
+  customerJourneyExpanded: (data: { lead_id: number; touchpoint_count: number }) => {
+    posthog.capture('customer_journey_expanded', data);
+  },
+  attributionModelToggled: (data: { model_type: string }) => {
+    posthog.capture('attribution_model_toggled', data);
+  },
+
   // User identification
   identifyUser: (userId: string, traits: Record<string, any>) => {
     posthog.identify(userId, traits);

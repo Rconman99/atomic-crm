@@ -73,6 +73,12 @@ const Header = () => {
           active={isActive("/leads")}
         />
         <SidebarNavItem
+          to="/attribution"
+          icon={<BarChart3 className="w-[18px] h-[18px]" />}
+          label="Attribution"
+          active={isActive("/attribution")}
+        />
+        <SidebarNavItem
           to="/contacts"
           icon={<Users2 className="w-[18px] h-[18px]" />}
           label="Contacts"

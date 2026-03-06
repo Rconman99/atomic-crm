@@ -257,6 +257,74 @@ export type LeadActivity = {
   created_at: string;
 } & Pick<RaRecord, "id">;
 
+export type Touchpoint = {
+  lead_id: Identifier | null;
+  contact_id: Identifier | null;
+  deal_id: Identifier | null;
+  anonymous_id: string | null;
+  touchpoint_type: string;
+  channel: string;
+  source: string | null;
+  medium: string | null;
+  campaign: string | null;
+  content: string | null;
+  term: string | null;
+  page_url: string | null;
+  page_title: string | null;
+  referrer_url: string | null;
+  is_first_touch: boolean;
+  is_last_touch: boolean;
+  is_lead_creation_touch: boolean;
+  is_deal_creation_touch: boolean;
+  metadata: Record<string, any>;
+  sales_id: Identifier | null;
+  created_at: string;
+} & Pick<RaRecord, "id">;
+
+export type ChannelAttribution = {
+  channel: string;
+  source: string | null;
+  leads_generated: number;
+  contacts_touched: number;
+  deals_influenced: number;
+  first_touch_leads: number;
+  last_touch_deals: number;
+  first_touch_revenue: number;
+  last_touch_revenue: number;
+  total_touchpoints: number;
+};
+
+export type LeadSourcePerformance = {
+  source: string;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  total_leads: number;
+  qualified_leads: number;
+  converted_leads: number;
+  conversion_rate: number;
+  avg_lead_score: number;
+  avg_days_to_convert: number | null;
+};
+
+export type CustomerJourney = {
+  person_name: string;
+  email: string;
+  lead_id: Identifier;
+  contact_id: Identifier | null;
+  deal_id: Identifier | null;
+  lead_source: string;
+  lead_created: string;
+  converted_at: string | null;
+  deal_created: string | null;
+  deal_stage: string | null;
+  deal_amount: number | null;
+  total_touchpoints: number;
+  first_touch_date: string | null;
+  last_touch_date: string | null;
+  days_in_funnel: number;
+};
+
 export type DealStage = LabeledValue;
 
 export interface NoteStatus extends LabeledValue {
