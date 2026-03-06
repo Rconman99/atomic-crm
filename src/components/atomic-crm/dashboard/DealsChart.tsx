@@ -6,9 +6,15 @@ import { memo, useMemo } from "react";
 
 import type { Deal } from "../types";
 
-const multiplier = {
+const multiplier: Record<string, number> = {
+  lead: 0.1,
+  "discovery-call": 0.2,
+  "proposal-sent": 0.4,
+  signed: 0.7,
+  "in-build": 0.8,
+  review: 0.9,
+  delivered: 0.95,
   opportunity: 0.2,
-  "proposal-sent": 0.5,
   "in-negociation": 0.8,
   delayed: 0.3,
 };
@@ -50,16 +56,15 @@ export const DealsChart = memo(() => {
       return {
         date: format(month, "MMM"),
         won: dealsByMonth[month]
-          .filter((deal: Deal) => deal.stage === "won")
+          .filter((deal: Deal) => ["won", "paid", "delivered"].includes(deal.stage))
           .reduce((acc: number, deal: Deal) => {
             acc += deal.amount;
             return acc;
           }, 0),
         pending: dealsByMonth[month]
-          .filter((deal: Deal) => !["won", "lost"].includes(deal.stage))
+          .filter((deal: Deal) => !["won", "lost", "paid"].includes(deal.stage))
           .reduce((acc: number, deal: Deal) => {
-            // @ts-expect-error - multiplier type issue
-            acc += deal.amount * multiplier[deal.stage];
+            acc += deal.amount * (multiplier[deal.stage] ?? 0.5);
             return acc;
           }, 0),
         lost: dealsByMonth[month]
