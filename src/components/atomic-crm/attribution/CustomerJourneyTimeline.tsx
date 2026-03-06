@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
 import type { CustomerJourney, Touchpoint } from "./attributionTypes";
 import { TouchpointTimeline } from "./TouchpointTimeline";
 import { analytics } from "@/providers/posthog";
@@ -105,6 +106,7 @@ export const CustomerJourneyTimeline = ({
   };
 
   return (
+    <ResourceErrorBoundary>
     <div className="space-y-4">
       {/* Filters */}
       <div className="flex items-center gap-3 flex-wrap">
@@ -250,6 +252,7 @@ export const CustomerJourneyTimeline = ({
         })}
       </div>
     </div>
+    </ResourceErrorBoundary>
   );
 };
 

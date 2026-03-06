@@ -34,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
 import type { Lead, LeadActivity } from "../types";
 import { LeadScoreBadge } from "./LeadScoreBadge";
 import { LeadConvert } from "./LeadConvert";
@@ -41,9 +42,11 @@ import { LEAD_STATUSES, statusColors } from "./leadConstants";
 import { useState } from "react";
 
 export const LeadShow = () => (
-  <ShowBase>
-    <LeadShowContent />
-  </ShowBase>
+  <ResourceErrorBoundary>
+    <ShowBase>
+      <LeadShowContent />
+    </ShowBase>
+  </ResourceErrorBoundary>
 );
 
 const activityIcons: Record<string, typeof Eye> = {

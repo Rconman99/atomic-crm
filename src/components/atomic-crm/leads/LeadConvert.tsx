@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
 import type { Lead } from "../types";
 
 export const LeadConvert = ({
@@ -57,6 +58,7 @@ export const LeadConvert = ({
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-md">
+      <ResourceErrorBoundary>
         <DialogHeader>
           <DialogTitle>Convert Lead to Contact</DialogTitle>
         </DialogHeader>
@@ -125,6 +127,7 @@ export const LeadConvert = ({
             {loading ? "Converting..." : "Convert"}
           </Button>
         </DialogFooter>
+      </ResourceErrorBoundary>
       </DialogContent>
     </Dialog>
   );

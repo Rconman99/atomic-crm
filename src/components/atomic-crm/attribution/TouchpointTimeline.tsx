@@ -25,6 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
 import { CHANNEL_COLORS, CHANNEL_LABELS } from "./attributionTypes";
 import type { Touchpoint } from "./attributionTypes";
 
@@ -64,6 +65,7 @@ export const TouchpointTimeline = ({
   );
 
   return (
+    <ResourceErrorBoundary>
     <TooltipProvider>
       <div className="relative pl-6">
         <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border" />
@@ -151,5 +153,6 @@ export const TouchpointTimeline = ({
         })}
       </div>
     </TooltipProvider>
+    </ResourceErrorBoundary>
   );
 };

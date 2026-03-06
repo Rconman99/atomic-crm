@@ -2,6 +2,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useGetList } from "ra-core";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
 import {
   AttributionModelToggle,
   type AttributionModel,
@@ -59,6 +60,7 @@ export const ChannelPerformance = ({
   }));
 
   return (
+    <ResourceErrorBoundary>
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-muted-foreground">
@@ -216,5 +218,6 @@ export const ChannelPerformance = ({
         </CardContent>
       </Card>
     </div>
+    </ResourceErrorBoundary>
   );
 };
