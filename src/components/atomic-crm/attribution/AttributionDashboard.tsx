@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -15,21 +15,54 @@ import { ChannelPerformance } from "./ChannelPerformance";
 import { LeadSourceAnalytics } from "./LeadSourceAnalytics";
 import { CustomerJourneyTimeline } from "./CustomerJourneyTimeline";
 
+export type DateRange = "7" | "30" | "90" | "all";
+
+const dateRangeOptions: { value: DateRange; label: string }[] = [
+  { value: "7", label: "Last 7 days" },
+  { value: "30", label: "Last 30 days" },
+  { value: "90", label: "Last 90 days" },
+  { value: "all", label: "All time" },
+];
+
+export function getDateRangeFilter(range: DateRange): string | undefined {
+  if (range === "all") return undefined;
+  const d = new Date();
+  d.setDate(d.getDate() - Number(range));
+  return d.toISOString();
+}
+
 export const AttributionDashboard = () => {
   const [attributionModel, setAttributionModel] = useState<AttributionModel>("first_touch");
   const [activeTab, setActiveTab] = useState("channels");
+  const [dateRange, setDateRange] = useState<DateRange>("30");
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     analytics.attributionDashboardViewed({ tab_name: tab });
   };
 
+  const sinceDate = useMemo(() => getDateRangeFilter(dateRange), [dateRange]);
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="text-2xl font-bold text-foreground">Attribution</h1>
-        <AttributionModelToggle value={attributionModel} onChange={setAttributionModel} />
+        <div className="flex items-center gap-3">
+          <Select value={dateRange} onValueChange={(v) => setDateRange(v as DateRange)}>
+            <SelectTrigger className="w-40 h-8 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {dateRangeOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <AttributionModelToggle value={attributionModel} onChange={setAttributionModel} />
+        </div>
       </div>
 
       {/* Tabs */}
@@ -57,15 +90,15 @@ export const AttributionDashboard = () => {
           </TabsList>
 
           <TabsContent value="channels" className="mt-6">
-            <ChannelPerformance attributionModel={attributionModel} />
+            <ChannelPerformance attributionModel={attributionModel} sinceDate={sinceDate} />
           </TabsContent>
 
           <TabsContent value="sources" className="mt-6">
-            <LeadSourceAnalytics />
+            <LeadSourceAnalytics sinceDate={sinceDate} />
           </TabsContent>
 
           <TabsContent value="journeys" className="mt-6">
-            <CustomerJourneyTimeline />
+            <CustomerJourneyTimeline sinceDate={sinceDate} />
           </TabsContent>
         </Tabs>
       </CrmErrorBoundary>

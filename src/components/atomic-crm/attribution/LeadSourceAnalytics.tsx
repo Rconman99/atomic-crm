@@ -23,13 +23,21 @@ interface SourceRow {
   avg_days_to_convert: number | null;
 }
 
-export const LeadSourceAnalytics = () => {
+export const LeadSourceAnalytics = ({
+  sinceDate,
+}: {
+  sinceDate?: string;
+}) => {
   const [sourceFilter, setSourceFilter] = useState<string>("all");
+
+  const filter: Record<string, any> = {};
+  if (sourceFilter !== "all") filter.source = sourceFilter;
+  if (sinceDate) filter["created_at@gte"] = sinceDate;
 
   const { data, isPending } = useGetList<SourceRow>("lead_source_performance", {
     pagination: { page: 1, perPage: 100 },
     sort: { field: "total_leads", order: "DESC" },
-    filter: sourceFilter !== "all" ? { source: sourceFilter } : undefined,
+    filter: Object.keys(filter).length > 0 ? filter : undefined,
   });
 
   if (isPending || !data) return null;

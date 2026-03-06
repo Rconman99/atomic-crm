@@ -50,6 +50,7 @@ import { Link } from "react-router";
 
 import { analytics } from "@/providers/posthog";
 import type { Lead, LeadActivity } from "../types";
+import { TouchpointTimeline, type Touchpoint } from "../attribution/TouchpointTimeline";
 import { LeadScoreBadge } from "./LeadScoreBadge";
 import { LeadConvert } from "./LeadConvert";
 import {
@@ -253,6 +254,14 @@ const LeadShowContent = () => {
             <CardContent className="pt-6">
               <h3 className="text-base font-semibold mb-4">Activity Timeline</h3>
               <ActivityTimeline leadId={record.id as number} />
+            </CardContent>
+          </Card>
+
+          {/* Touchpoint Timeline */}
+          <Card className="border border-border shadow-sm">
+            <CardContent className="pt-6">
+              <h3 className="text-base font-semibold mb-4">Touchpoints</h3>
+              <LeadTouchpoints leadId={record.id as number} />
             </CardContent>
           </Card>
         </div>
@@ -461,6 +470,21 @@ const ScoreBreakdown = ({ leadId }: { leadId: number }) => {
       ))}
     </div>
   );
+};
+
+const LeadTouchpoints = ({ leadId }: { leadId: number }) => {
+  const dataProvider = useDataProvider();
+  const { data } = useQuery({
+    queryKey: ["touchpoints", "getList", { leadId }],
+    queryFn: () =>
+      dataProvider.getList<Touchpoint>("touchpoints", {
+        filter: { lead_id: leadId },
+        sort: { field: "created_at", order: "ASC" },
+        pagination: { page: 1, perPage: 100 },
+      }),
+  });
+
+  return <TouchpointTimeline touchpoints={data?.data ?? []} />;
 };
 
 const LogActivityModal = ({

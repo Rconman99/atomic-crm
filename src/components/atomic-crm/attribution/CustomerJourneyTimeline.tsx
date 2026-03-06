@@ -42,14 +42,22 @@ interface JourneyRow {
   days_in_funnel: number;
 }
 
-export const CustomerJourneyTimeline = () => {
+export const CustomerJourneyTimeline = ({
+  sinceDate,
+}: {
+  sinceDate?: string;
+}) => {
   const [sourceFilter, setSourceFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<string>("days_in_funnel");
+
+  const filter: Record<string, any> = {};
+  if (sourceFilter !== "all") filter.lead_source = sourceFilter;
+  if (sinceDate) filter["lead_created@gte"] = sinceDate;
 
   const { data, isPending } = useGetList<JourneyRow>("customer_journeys", {
     pagination: { page: 1, perPage: 50 },
     sort: { field: sortField, order: "DESC" },
-    filter: sourceFilter !== "all" ? { lead_source: sourceFilter } : undefined,
+    filter: Object.keys(filter).length > 0 ? filter : undefined,
   });
 
   if (isPending || !data) return null;

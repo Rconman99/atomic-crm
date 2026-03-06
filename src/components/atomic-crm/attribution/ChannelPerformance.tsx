@@ -22,14 +22,17 @@ interface ChannelRow {
 
 export const ChannelPerformance = ({
   attributionModel,
+  sinceDate,
 }: {
   attributionModel: AttributionModel;
+  sinceDate?: string;
 }) => {
   const { data, isPending } = useGetList<ChannelRow>(
     "channel_attribution_summary",
     {
       pagination: { page: 1, perPage: 100 },
       sort: { field: "leads_generated", order: "DESC" },
+      filter: sinceDate ? { "created_at@gte": sinceDate } : undefined,
     }
   );
 
