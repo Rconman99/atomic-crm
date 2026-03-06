@@ -114,6 +114,17 @@ export const analytics = {
     newScore: number;
     activityType: string;
   }) => capture("lead_score_changed", data),
+
+  attributionDashboardViewed: (data: { tab_name: string }) =>
+    capture("attribution_dashboard_viewed", data),
+
+  customerJourneyExpanded: (data: {
+    lead_id: number;
+    touchpoint_count: number;
+  }) => capture("customer_journey_expanded", data),
+
+  attributionModelToggled: (data: { model_type: string }) =>
+    capture("attribution_model_toggled", data),
 };
 
 export default posthog;

@@ -18,6 +18,7 @@ const REALTIME_TABLES = [
   "tasks",
   "leads",
   "lead_activities",
+  "touchpoints",
 ];
 
 export const Layout = ({ children }: { children: ReactNode }) => {

@@ -23,6 +23,7 @@ import deals from "../deals";
 import projects from "../projects";
 import invoices from "../invoices";
 import analytics from "../analytics";
+import attribution from "../attribution";
 import leads from "../leads";
 import { Layout } from "../layout/Layout";
 import { MobileLayout } from "../layout/MobileLayout";
@@ -268,6 +269,11 @@ const DesktopAdmin = (props: CoreAdminProps) => {
       <Resource name="projects" {...projects} />
       <Resource name="invoices" {...invoices} />
       <Resource name="project_analytics" {...analytics} />
+      <Resource name="attribution" {...attribution} />
+      <Resource name="touchpoints" />
+      <Resource name="channel_attribution_summary" />
+      <Resource name="lead_source_performance" />
+      <Resource name="customer_journeys" />
       <Resource name="lead_activities" />
       <Resource name="contact_notes" />
       <Resource name="deal_notes" />

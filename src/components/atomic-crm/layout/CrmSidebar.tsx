@@ -6,6 +6,7 @@ import {
   Funnel,
   Handshake,
   LayoutDashboard,
+  Route,
   Settings,
   Users,
 } from "lucide-react";
@@ -18,6 +19,12 @@ import { ThemeModeToggle } from "@/components/admin/theme-mode-toggle";
 const navItems = [
   { label: "Dashboard", to: "/", icon: LayoutDashboard, match: "/" },
   { label: "Leads", to: "/leads", icon: Funnel, match: "/leads/*" },
+  {
+    label: "Attribution",
+    to: "/attribution",
+    icon: Route,
+    match: "/attribution/*",
+  },
   { label: "Contacts", to: "/contacts", icon: Users, match: "/contacts/*" },
   {
     label: "Companies",

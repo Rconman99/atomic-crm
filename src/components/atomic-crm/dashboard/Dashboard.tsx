@@ -6,9 +6,12 @@ import {
   Users,
 } from "lucide-react";
 import { useGetList } from "ra-core";
+import { Link } from "react-router";
 
 import { ResourceErrorBoundary } from "../misc/ResourceErrorBoundary";
-import type { Contact, ContactNote, Deal } from "../types";
+import type { Contact, ContactNote, Deal, Lead } from "../types";
+import type { ChannelAttribution } from "../attribution/attributionTypes";
+import { CHANNEL_COLORS, CHANNEL_LABELS } from "../attribution/attributionTypes";
 import { DashboardActivityLog } from "./DashboardActivityLog";
 import { DashboardStepper } from "./DashboardStepper";
 import { DealsChart } from "./DealsChart";
@@ -16,6 +19,7 @@ import { HotContacts } from "./HotContacts";
 import { MetricCard } from "./MetricCard";
 import { TasksList } from "./TasksList";
 import { Welcome } from "./Welcome";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const Dashboard = () => {
   const {
@@ -46,6 +50,22 @@ export const Dashboard = () => {
   const { total: totalProjects } = useGetList("projects", {
     pagination: { page: 1, perPage: 1 },
   });
+
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+
+  const { data: recentLeads } = useGetList<Lead>("leads", {
+    pagination: { page: 1, perPage: 100 },
+    sort: { field: "created_at", order: "DESC" },
+    filter: { "created_at@gte": weekAgo },
+  });
+
+  const { data: topChannels } = useGetList<ChannelAttribution>(
+    "channel_attribution_summary",
+    {
+      pagination: { page: 1, perPage: 3 },
+      sort: { field: "leads_generated", order: "DESC" },
+    },
+  );
 
   const isPending = isPendingContact || isPendingContactNotes || isPendingDeal;
 
@@ -126,7 +146,146 @@ export const Dashboard = () => {
           <TasksList />
         </div>
       </div>
+
+      {/* Lead Pipeline + Top Channels */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <LeadPipelineCard leads={recentLeads} />
+        <TopChannelsCard channels={topChannels} />
+      </div>
     </div>
     </ResourceErrorBoundary>
+  );
+};
+
+const LeadPipelineCard = ({ leads }: { leads?: Lead[] }) => {
+  const newCount = leads?.filter((l) => l.status === "new").length ?? 0;
+  const qualifiedCount =
+    leads?.filter((l) => l.status === "qualified").length ?? 0;
+  const convertedCount =
+    leads?.filter((l) => l.status === "converted").length ?? 0;
+  const total = leads?.length ?? 0;
+
+  return (
+    <Card>
+      <CardContent className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-medium">Lead Pipeline (This Week)</h3>
+          <Link
+            to="/leads"
+            className="text-xs text-primary hover:underline"
+          >
+            View all
+          </Link>
+        </div>
+        <div className="flex items-center gap-2">
+          <FunnelBar
+            label="New"
+            count={newCount}
+            total={total}
+            color="var(--stage-lead)"
+          />
+          <span className="text-muted-foreground text-xs shrink-0">→</span>
+          <FunnelBar
+            label="Qualified"
+            count={qualifiedCount}
+            total={total}
+            color="var(--stage-proposal)"
+          />
+          <span className="text-muted-foreground text-xs shrink-0">→</span>
+          <FunnelBar
+            label="Converted"
+            count={convertedCount}
+            total={total}
+            color="var(--stage-delivered)"
+          />
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+const FunnelBar = ({
+  label,
+  count,
+  total,
+  color,
+}: {
+  label: string;
+  count: number;
+  total: number;
+  color: string;
+}) => (
+  <div className="flex-1 text-center">
+    <div
+      className="rounded py-3 mb-1"
+      style={{
+        backgroundColor: color,
+        opacity: total > 0 ? 0.3 + (count / Math.max(total, 1)) * 0.7 : 0.3,
+      }}
+    >
+      <span className="text-lg font-bold text-white">{count}</span>
+    </div>
+    <span className="text-[11px] text-muted-foreground">{label}</span>
+  </div>
+);
+
+const TopChannelsCard = ({
+  channels,
+}: {
+  channels?: ChannelAttribution[];
+}) => {
+  if (!channels?.length) {
+    return (
+      <Card>
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-medium">Top Channels (30 days)</h3>
+            <Link
+              to="/attribution"
+              className="text-xs text-primary hover:underline"
+            >
+              View all
+            </Link>
+          </div>
+          <p className="text-sm text-muted-foreground py-4 text-center">
+            No channel data yet
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardContent className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-medium">Top Channels (30 days)</h3>
+          <Link
+            to="/attribution"
+            className="text-xs text-primary hover:underline"
+          >
+            View all
+          </Link>
+        </div>
+        <div className="space-y-3">
+          {channels.map((ch) => (
+            <div key={ch.channel} className="flex items-center gap-3">
+              <div
+                className="w-3 h-3 rounded-full shrink-0"
+                style={{
+                  backgroundColor: CHANNEL_COLORS[ch.channel] || "#9E9E9E",
+                }}
+              />
+              <span className="text-sm flex-1">
+                {CHANNEL_LABELS[ch.channel] || ch.channel}
+              </span>
+              <span className="text-sm font-medium">
+                {ch.leads_generated} leads
+              </span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
