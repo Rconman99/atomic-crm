@@ -1,60 +1,61 @@
 import type { ConfigurationContextValue } from "./ConfigurationContext";
 
-export const defaultDarkModeLogo = "./logos/logo_atomic_crm_dark.svg";
-export const defaultLightModeLogo = "./logos/logo_atomic_crm_light.svg";
+export const defaultDarkModeLogo = "./logos/logo_rc_digital_dark.svg";
+export const defaultLightModeLogo = "./logos/logo_rc_digital_light.svg";
 
-export const defaultTitle = "Atomic CRM";
+export const defaultTitle = "RC Digital CRM";
 
 export const defaultCompanySectors = [
-  { value: "communication-services", label: "Communication Services" },
-  { value: "consumer-discretionary", label: "Consumer Discretionary" },
-  { value: "consumer-staples", label: "Consumer Staples" },
-  { value: "energy", label: "Energy" },
-  { value: "financials", label: "Financials" },
-  { value: "health-care", label: "Health Care" },
-  { value: "industrials", label: "Industrials" },
-  { value: "information-technology", label: "Information Technology" },
-  { value: "materials", label: "Materials" },
+  { value: "healthcare", label: "Healthcare" },
+  { value: "legal", label: "Legal" },
   { value: "real-estate", label: "Real Estate" },
-  { value: "utilities", label: "Utilities" },
+  { value: "restaurant", label: "Restaurant" },
+  { value: "retail", label: "Retail" },
+  { value: "tech-startup", label: "Tech Startup" },
+  { value: "construction", label: "Construction" },
+  { value: "finance", label: "Finance" },
+  { value: "education", label: "Education" },
+  { value: "nonprofit", label: "Nonprofit" },
+  { value: "other", label: "Other" },
 ];
 
 export const defaultDealStages = [
-  { value: "opportunity", label: "Opportunity" },
+  { value: "lead", label: "Lead" },
+  { value: "discovery-call", label: "Discovery Call" },
   { value: "proposal-sent", label: "Proposal Sent" },
-  { value: "in-negociation", label: "In Negotiation" },
-  { value: "won", label: "Won" },
-  { value: "lost", label: "Lost" },
-  { value: "delayed", label: "Delayed" },
+  { value: "signed", label: "Signed" },
+  { value: "in-build", label: "In Build" },
+  { value: "review", label: "Review" },
+  { value: "delivered", label: "Delivered" },
+  { value: "paid", label: "Paid" },
 ];
 
-export const defaultDealPipelineStatuses = ["won"];
+export const defaultDealPipelineStatuses = ["paid"];
 
 export const defaultDealCategories = [
-  { value: "other", label: "Other" },
-  { value: "copywriting", label: "Copywriting" },
-  { value: "print-project", label: "Print project" },
-  { value: "ui-design", label: "UI Design" },
-  { value: "website-design", label: "Website design" },
+  { value: "website-build", label: "Website Build" },
+  { value: "app-development", label: "App Development" },
+  { value: "redesign", label: "Redesign" },
+  { value: "maintenance", label: "Maintenance" },
+  { value: "consulting", label: "Consulting" },
 ];
 
 export const defaultNoteStatuses = [
   { value: "cold", label: "Cold", color: "#7dbde8" },
   { value: "warm", label: "Warm", color: "#e8cb7d" },
-  { value: "hot", label: "Hot", color: "#e88b7d" },
+  { value: "hot", label: "Hot", color: "#e94560" },
   { value: "in-contract", label: "In Contract", color: "#a4e87d" },
 ];
 
 export const defaultTaskTypes = [
   { value: "none", label: "None" },
   { value: "email", label: "Email" },
-  { value: "demo", label: "Demo" },
-  { value: "lunch", label: "Lunch" },
+  { value: "call", label: "Call" },
   { value: "meeting", label: "Meeting" },
   { value: "follow-up", label: "Follow-up" },
-  { value: "thank-you", label: "Thank you" },
-  { value: "ship", label: "Ship" },
-  { value: "call", label: "Call" },
+  { value: "demo", label: "Demo" },
+  { value: "proposal", label: "Proposal" },
+  { value: "review", label: "Review" },
 ];
 
 export const defaultConfiguration: ConfigurationContextValue = {

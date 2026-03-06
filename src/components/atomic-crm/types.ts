@@ -210,6 +210,79 @@ export interface RAFile {
 
 export type AttachmentNote = RAFile;
 
+export type Project = {
+  name: string;
+  description: string;
+  project_type: string;
+  company_id: Identifier;
+  deal_id?: Identifier | null;
+  contact_ids: Identifier[];
+  sales_id: Identifier;
+  tech_stack: string[];
+  domain: string;
+  staging_url: string;
+  production_url: string;
+  repo_url: string;
+  start_date: string;
+  target_end_date: string;
+  actual_end_date?: string | null;
+  status: string;
+  pm_notes: string;
+  action_items: { task: string; done: boolean; due?: string }[];
+  contract_value: number;
+  monthly_retainer: number;
+  total_paid: number;
+  deliverables: string;
+  value_delivered: string;
+  created_at: string;
+  updated_at: string;
+} & Pick<RaRecord, "id">;
+
+export type Invoice = {
+  company_id: Identifier;
+  project_id?: Identifier | null;
+  deal_id?: Identifier | null;
+  sales_id: Identifier;
+  invoice_number: string;
+  description: string;
+  amount: number;
+  tax_rate: number;
+  tax_amount: number;
+  total_amount: number;
+  line_items: { description: string; quantity: number; rate: number; amount: number }[];
+  status: string;
+  issue_date: string;
+  due_date: string;
+  paid_date?: string | null;
+  payment_method: string;
+  payment_reference: string;
+  notes: string;
+  terms: string;
+  created_at: string;
+  updated_at: string;
+} & Pick<RaRecord, "id">;
+
+export type ProjectAnalytic = {
+  project_id: Identifier;
+  date: string;
+  organic_traffic: number;
+  keyword_rankings: { keyword: string; position: number; change: number }[];
+  domain_authority: number;
+  backlinks_count: number;
+  leads_generated: number;
+  lead_sources: { source: string; count: number }[];
+  form_submissions: number;
+  phone_calls: number;
+  revenue_from_leads: number;
+  estimated_lead_value: number;
+  page_speed_score: number;
+  uptime_percent: number;
+  performance_bonus_eligible: boolean;
+  bonus_amount: number;
+  bonus_notes: string;
+  created_at: string;
+} & Pick<RaRecord, "id">;
+
 export interface LabeledValue {
   value: string;
   label: string;
