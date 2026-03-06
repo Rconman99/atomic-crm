@@ -375,6 +375,25 @@ const lifeCycleCallbacks: ResourceCallbacks[] = [
       return applyFullTextSearch(["bonus_notes"])(params);
     },
   },
+  {
+    resource: "leads",
+    beforeGetList: async (params) => {
+      return applyFullTextSearch([
+        "first_name",
+        "last_name",
+        "email",
+        "company_name",
+        "source",
+      ])(params);
+    },
+    beforeCreate: async (params) => ({
+      ...params,
+      data: {
+        created_at: new Date().toISOString(),
+        ...params.data,
+      },
+    }),
+  },
 ];
 
 export const dataProvider = withLifecycleCallbacks(

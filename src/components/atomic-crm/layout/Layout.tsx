@@ -16,6 +16,8 @@ const REALTIME_TABLES = [
   "contacts",
   "companies",
   "tasks",
+  "leads",
+  "lead_activities",
 ];
 
 export const Layout = ({ children }: { children: ReactNode }) => {

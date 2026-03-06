@@ -283,6 +283,54 @@ export type ProjectAnalytic = {
   created_at: string;
 } & Pick<RaRecord, "id">;
 
+export type LeadStatus = 'new' | 'contacted' | 'qualifying' | 'qualified' | 'unqualified' | 'converted' | 'lost';
+
+export type LeadSource = 'manual' | 'website_form' | 'landing_page' | 'referral' | 'linkedin' | 'cold_outbound' | 'google_ads' | 'social_media' | 'event' | 'partner';
+
+export type Lead = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  company_name: string;
+  job_title: string;
+  linkedin_url: string;
+  source: LeadSource;
+  source_detail: string;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_term: string;
+  utm_content: string;
+  landing_page_url: string;
+  referrer_url: string;
+  lead_score: number;
+  status: LeadStatus;
+  qualification_notes: string;
+  sales_id: Identifier;
+  assigned_at: string;
+  converted_at?: string | null;
+  converted_contact_id?: Identifier | null;
+  converted_deal_id?: Identifier | null;
+  tags: Identifier[];
+  notes: string;
+  custom_fields: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+} & Pick<RaRecord, "id">;
+
+export type LeadActivityType = 'page_view' | 'form_submit' | 'email_open' | 'email_click' | 'call' | 'meeting' | 'note' | 'status_change' | 'score_change' | 'email_sent';
+
+export type LeadActivity = {
+  lead_id: Identifier;
+  sales_id?: Identifier;
+  activity_type: LeadActivityType;
+  description: string;
+  metadata: Record<string, unknown>;
+  score_delta: number;
+  created_at: string;
+} & Pick<RaRecord, "id">;
+
 export interface LabeledValue {
   value: string;
   label: string;
