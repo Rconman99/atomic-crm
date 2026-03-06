@@ -3,6 +3,7 @@ import { supabaseAuthProvider } from "ra-supabase-core";
 
 import { canAccess } from "../commons/canAccess";
 import { supabase } from "./supabase";
+import { analytics } from "@/providers/posthog";
 
 const baseAuthProvider = supabaseAuthProvider(supabase, {
   getIdentity: async () => {
@@ -97,7 +98,20 @@ export const authProvider: AuthProvider = {
       }
       return;
     }
-    return baseAuthProvider.login(params);
+    const result = await baseAuthProvider.login(params);
+    // Identify user in PostHog after successful login
+    try {
+      const sale = await getSale();
+      if (sale) {
+        analytics.identifyUser(String(sale.id), {
+          name: `${sale.first_name} ${sale.last_name}`,
+          role: sale.administrator ? "admin" : "user",
+        });
+      }
+    } catch {
+      // Non-critical: analytics identification failure should not block login
+    }
+    return result;
   },
   logout: async (params) => {
     clearCache();

@@ -9,6 +9,8 @@ import { FilterButton } from "@/components/admin/filter-form";
 import { SearchInput } from "@/components/admin/search-input";
 import { SelectInput } from "@/components/admin/select-input";
 
+import { useRealtimeSubscription } from "@/providers/realtimeProvider";
+
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import { TopToolbar } from "../layout/TopToolbar";
 import { DealArchivedList } from "./DealArchivedList";
@@ -22,6 +24,9 @@ import { OnlyMineInput } from "./OnlyMineInput";
 const DealList = () => {
   const { identity } = useGetIdentity();
   const { dealCategories } = useConfigurationContext();
+
+  // Subscribe to realtime deal updates
+  useRealtimeSubscription("deals");
 
   if (!identity) return null;
 

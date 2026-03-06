@@ -3,6 +3,8 @@ import isEqual from "lodash/isEqual";
 import { useDataProvider, useListContext, type DataProvider } from "ra-core";
 import { useEffect, useState } from "react";
 
+import { analytics } from "@/providers/posthog";
+
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import type { Deal } from "../types";
 import { DealColumn } from "./DealColumn";
@@ -63,6 +65,26 @@ export const DealListContent = () => {
         dealsByStage,
       ),
     );
+
+    // Track stage changes in PostHog
+    if (sourceStage !== destinationStage) {
+      analytics.dealStageChanged({
+        dealId: sourceDeal.id,
+        from: sourceStage,
+        to: destinationStage,
+        amount: sourceDeal.amount,
+      });
+      if (destinationStage === "won" || destinationStage === "paid") {
+        analytics.dealWon({
+          dealId: sourceDeal.id,
+          amount: sourceDeal.amount,
+          daysInPipeline: Math.floor(
+            (Date.now() - new Date(sourceDeal.created_at).getTime()) /
+              (1000 * 60 * 60 * 24),
+          ),
+        });
+      }
+    }
 
     // persist the changes
     updateDealStage(sourceDeal, destinationDeal, dataProvider).then(() => {
