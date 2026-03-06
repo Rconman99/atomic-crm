@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { isValid } from "date-fns";
-import { Archive, ArchiveRestore } from "lucide-react";
+import { Archive, ArchiveRestore, Calendar, DollarSign, Tag } from "lucide-react";
 import {
   ShowBase,
   useDataProvider,
@@ -37,7 +37,7 @@ export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="lg:max-w-4xl p-4 overflow-y-auto max-h-9/10 top-1/20 translate-y-0">
+      <DialogContent className="lg:max-w-5xl p-0 overflow-y-auto max-h-9/10 top-1/20 translate-y-0 rounded-xl border border-border">
         {id ? (
           <ShowBase id={id}>
             <DealShowContent />
@@ -48,141 +48,198 @@ export const DealShow = ({ open, id }: { open: boolean; id?: string }) => {
   );
 };
 
+const stageColorMap: Record<string, { bg: string; text: string }> = {
+  lead: { bg: "rgba(124, 94, 233, 0.12)", text: "#7C5EE9" },
+  "discovery-call": { bg: "rgba(124, 94, 233, 0.12)", text: "#7C5EE9" },
+  "proposal-sent": { bg: "rgba(0, 188, 212, 0.12)", text: "#00BCD4" },
+  signed: { bg: "rgba(0, 188, 212, 0.12)", text: "#00BCD4" },
+  "in-build": { bg: "rgba(255, 152, 0, 0.12)", text: "#FF9800" },
+  review: { bg: "rgba(255, 152, 0, 0.12)", text: "#FF9800" },
+  delivered: { bg: "rgba(76, 175, 80, 0.12)", text: "#4CAF50" },
+  paid: { bg: "rgba(76, 175, 80, 0.12)", text: "#4CAF50" },
+  opportunity: { bg: "rgba(124, 94, 233, 0.12)", text: "#7C5EE9" },
+  "in-negociation": { bg: "rgba(0, 188, 212, 0.12)", text: "#00BCD4" },
+  won: { bg: "rgba(76, 175, 80, 0.12)", text: "#4CAF50" },
+  lost: { bg: "rgba(233, 69, 96, 0.12)", text: "#e94560" },
+  delayed: { bg: "rgba(255, 152, 0, 0.12)", text: "#FF9800" },
+};
+
 const DealShowContent = () => {
   const { dealStages, dealCategories } = useConfigurationContext();
   const record = useRecordContext<Deal>();
   if (!record) return null;
 
+  const stageColors = stageColorMap[record.stage] ?? {
+    bg: "rgba(156, 163, 175, 0.12)",
+    text: "#999",
+  };
+
   return (
-    <>
-      <div className="space-y-2">
-        {record.archived_at ? <ArchivedTitle /> : null}
-        <div className="flex-1">
-          <div className="flex justify-between items-start mb-8">
-            <div className="flex items-center gap-4">
+    <div>
+      {record.archived_at ? <ArchivedTitle /> : null}
+
+      {/* Header */}
+      <div className="flex justify-between items-start p-6 pb-4">
+        <div className="flex items-center gap-4">
+          <ReferenceField
+            source="company_id"
+            reference="companies"
+            link="show"
+          >
+            <CompanyAvatar />
+          </ReferenceField>
+          <div>
+            <h2 className="text-2xl font-bold text-foreground">{record.name}</h2>
+            <div className="text-sm text-muted-foreground mt-0.5">
               <ReferenceField
                 source="company_id"
                 reference="companies"
                 link="show"
-              >
-                <CompanyAvatar />
-              </ReferenceField>
-              <h2 className="text-2xl font-semibold">{record.name}</h2>
-            </div>
-            <div className={`flex gap-2 ${record.archived_at ? "" : "pr-12"}`}>
-              {record.archived_at ? (
-                <>
-                  <UnarchiveButton record={record} />
-                  <DeleteButton />
-                </>
-              ) : (
-                <>
-                  <ArchiveButton record={record} />
-                  <EditButton />
-                </>
-              )}
+              />
             </div>
           </div>
+        </div>
+        <div className={`flex gap-2 ${record.archived_at ? "" : "pr-8"}`}>
+          {record.archived_at ? (
+            <>
+              <UnarchiveButton record={record} />
+              <DeleteButton />
+            </>
+          ) : (
+            <>
+              <ArchiveButton record={record} />
+              <EditButton />
+            </>
+          )}
+        </div>
+      </div>
 
-          <div className="flex gap-8 m-4">
-            <div className="flex flex-col mr-10">
-              <span className="text-xs text-muted-foreground tracking-wide">
-                Expected closing date
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="text-sm">
-                  {isValid(new Date(record.expected_closing_date))
-                    ? formatISODateString(record.expected_closing_date)
-                    : "Invalid date"}
-                </span>
-                {new Date(record.expected_closing_date) < new Date() ? (
-                  <Badge variant="destructive">Past</Badge>
-                ) : null}
-              </div>
-            </div>
+      <Separator />
 
-            <div className="flex flex-col mr-10">
-              <span className="text-xs text-muted-foreground tracking-wide">
-                Budget
-              </span>
-              <span className="text-sm">
-                {record.amount.toLocaleString("en-US", {
-                  notation: "compact",
-                  style: "currency",
-                  currency: "USD",
-                  currencyDisplay: "narrowSymbol",
-                  minimumSignificantDigits: 3,
-                })}
-              </span>
-            </div>
-
+      {/* Two-column content */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-0">
+        {/* Left: Deal details - 60% */}
+        <div className="lg:col-span-3 p-6 space-y-6">
+          {/* Metadata cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <MetaField
+              icon={<Calendar className="w-4 h-4 text-muted-foreground" />}
+              label="Expected close"
+              value={
+                isValid(new Date(record.expected_closing_date))
+                  ? formatISODateString(record.expected_closing_date)
+                  : "Not set"
+              }
+              badge={
+                new Date(record.expected_closing_date) < new Date() ? (
+                  <Badge variant="destructive" className="ml-1 text-[10px] px-1.5 py-0">Past</Badge>
+                ) : null
+              }
+            />
+            <MetaField
+              icon={<DollarSign className="w-4 h-4 text-muted-foreground" />}
+              label="Budget"
+              value={record.amount.toLocaleString("en-US", {
+                notation: "compact",
+                style: "currency",
+                currency: "USD",
+                currencyDisplay: "narrowSymbol",
+                minimumSignificantDigits: 3,
+              })}
+            />
             {record.category && (
-              <div className="flex flex-col mr-10">
-                <span className="text-xs text-muted-foreground tracking-wide">
-                  Category
-                </span>
-                <span className="text-sm">
-                  {dealCategories.find((c) => c.value === record.category)
-                    ?.label ?? record.category}
-                </span>
-              </div>
+              <MetaField
+                icon={<Tag className="w-4 h-4 text-muted-foreground" />}
+                label="Category"
+                value={
+                  dealCategories.find((c) => c.value === record.category)
+                    ?.label ?? record.category
+                }
+              />
             )}
-
-            <div className="flex flex-col mr-10">
-              <span className="text-xs text-muted-foreground tracking-wide">
+            <div>
+              <span className="text-xs text-muted-foreground block mb-1">
                 Stage
               </span>
-              <span className="text-sm">
+              <span
+                className="stage-pill"
+                style={{
+                  backgroundColor: stageColors.bg,
+                  color: stageColors.text,
+                }}
+              >
                 {findDealLabel(dealStages, record.stage)}
               </span>
             </div>
           </div>
 
           {!!record.contact_ids?.length && (
-            <div className="m-4">
-              <div className="flex flex-col min-h-12 mr-10">
-                <span className="text-xs text-muted-foreground tracking-wide">
-                  Contacts
-                </span>
-                <ReferenceArrayField
-                  source="contact_ids"
-                  reference="contacts_summary"
-                >
-                  <ContactList />
-                </ReferenceArrayField>
-              </div>
+            <div>
+              <span className="text-xs text-muted-foreground block mb-2">
+                Contacts
+              </span>
+              <ReferenceArrayField
+                source="contact_ids"
+                reference="contacts_summary"
+              >
+                <ContactList />
+              </ReferenceArrayField>
             </div>
           )}
 
           {record.description && (
-            <div className="m-4 whitespace-pre-line">
-              <span className="text-xs text-muted-foreground tracking-wide">
+            <div>
+              <span className="text-xs text-muted-foreground block mb-1">
                 Description
               </span>
-              <p className="text-sm leading-6">{record.description}</p>
+              <p className="text-sm leading-6 whitespace-pre-line">
+                {record.description}
+              </p>
             </div>
           )}
+        </div>
 
-          <div className="m-4">
-            <Separator className="mb-4" />
-            <ReferenceManyField
-              target="deal_id"
-              reference="deal_notes"
-              sort={{ field: "date", order: "DESC" }}
-              empty={<NoteCreate reference={"deals"} />}
-            >
-              <NotesIterator reference="deals" />
-            </ReferenceManyField>
-          </div>
+        {/* Right: Notes / Activity - 40% */}
+        <div className="lg:col-span-2 border-l border-border p-6 bg-muted/30">
+          <h3 className="text-base font-semibold mb-4">Activity</h3>
+          <ReferenceManyField
+            target="deal_id"
+            reference="deal_notes"
+            sort={{ field: "date", order: "DESC" }}
+            empty={<NoteCreate reference={"deals"} />}
+          >
+            <NotesIterator reference="deals" />
+          </ReferenceManyField>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
+const MetaField = ({
+  icon,
+  label,
+  value,
+  badge,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  badge?: React.ReactNode;
+}) => (
+  <div>
+    <span className="text-xs text-muted-foreground block mb-1">{label}</span>
+    <div className="flex items-center gap-1.5">
+      {icon}
+      <span className="text-sm font-medium">{value}</span>
+      {badge}
+    </div>
+  </div>
+);
+
 const ArchivedTitle = () => (
-  <div className="bg-orange-500 px-6 py-4">
-    <h3 className="text-lg font-bold text-white">Archived Deal</h3>
+  <div className="bg-orange-500 px-6 py-3 rounded-t-xl">
+    <h3 className="text-sm font-bold text-white">Archived Deal</h3>
   </div>
 );
 

@@ -8,15 +8,6 @@ import { Notification } from "@/components/admin/notification";
 import { useConfigurationContext } from "@/components/atomic-crm/root/ConfigurationContext.tsx";
 import { SSOAuthButton } from "./SSOAuthButton";
 
-/**
- * Login page displayed when authentication is enabled and the user is not authenticated.
- *
- * Automatically shown when an unauthenticated user tries to access a protected route.
- * Handles login via authProvider.login() and displays error notifications on failure.
- *
- * @see {@link https://marmelab.com/shadcn-admin-kit/docs/loginpage LoginPage documentation}
- * @see {@link https://marmelab.com/shadcn-admin-kit/docs/security Security documentation}
- */
 export const LoginPage = (props: { redirectTo?: string }) => {
   const {
     darkModeLogo,
@@ -91,20 +82,53 @@ export const LoginPage = (props: { redirectTo?: string }) => {
   return (
     <div className="min-h-screen flex">
       <div className="relative grid w-full lg:grid-cols-2">
-        <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-          <div className="absolute inset-0 bg-zinc-900" />
-          <div className="relative z-20 flex items-center text-lg font-medium">
-            <img className="h-6 mr-2" src={darkModeLogo} alt={title} />
+        {/* Left branding panel - Twenty-inspired dark panel */}
+        <div className="relative hidden h-full flex-col p-10 text-white lg:flex overflow-hidden">
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, #1a1a2e 100%)" }}
+          />
+          {/* Decorative elements */}
+          <div
+            className="absolute top-1/4 right-[-100px] w-[300px] h-[300px] rounded-full opacity-10"
+            style={{ background: "radial-gradient(circle, #e94560, transparent)" }}
+          />
+          <div
+            className="absolute bottom-1/4 left-[-50px] w-[200px] h-[200px] rounded-full opacity-8"
+            style={{ background: "radial-gradient(circle, #0f3460, transparent)" }}
+          />
+
+          <div className="relative z-20 flex items-center text-lg font-bold tracking-tight">
+            <img className="h-8 mr-3" src={darkModeLogo} alt={title} />
             {title}
           </div>
+
+          <div className="relative z-20 mt-auto space-y-4">
+            <h2 className="text-3xl font-bold leading-tight">
+              Manage your clients.
+              <br />
+              <span style={{ color: "#e94560" }}>Grow your agency.</span>
+            </h2>
+            <p className="text-base text-white/60 max-w-md">
+              Track deals, manage projects, and deliver value to every client
+              with RC Digital CRM.
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col justify-center w-full p-4 lg:p-8">
-          <div className="w-full space-y-6 lg:mx-auto lg:w-[350px]">
-            <div className="text-center">
-              <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
+
+        {/* Right login form */}
+        <div className="flex flex-col justify-center w-full p-6 lg:p-12">
+          <div className="w-full space-y-8 lg:mx-auto lg:w-[380px]">
+            <div className="text-center space-y-2">
+              <h1 className="text-2xl font-bold tracking-tight">
+                Welcome back
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Sign in to your RC Digital CRM account
+              </p>
             </div>
             {disableEmailPasswordAuthentication ? null : (
-              <Form className="space-y-8" onSubmit={handleSubmit}>
+              <Form className="space-y-6" onSubmit={handleSubmit}>
                 <TextInput
                   label="Email"
                   source="email"
@@ -120,10 +144,13 @@ export const LoginPage = (props: { redirectTo?: string }) => {
                 <div className="flex flex-col gap-4">
                   <Button
                     type="submit"
-                    className="cursor-pointer"
+                    className="cursor-pointer h-11 font-semibold"
+                    style={{
+                      background: "linear-gradient(135deg, #e94560, #c73651)",
+                    }}
                     disabled={loading}
                   >
-                    Sign in
+                    {loading ? "Signing in..." : "Sign in"}
                   </Button>
                 </div>
               </Form>
@@ -136,7 +163,7 @@ export const LoginPage = (props: { redirectTo?: string }) => {
             {disableEmailPasswordAuthentication ? null : (
               <Link
                 to={"/forgot-password"}
-                className="block text-sm text-center hover:underline"
+                className="block text-sm text-center text-muted-foreground hover:text-foreground hover:underline transition-colors"
               >
                 Forgot your password?
               </Link>

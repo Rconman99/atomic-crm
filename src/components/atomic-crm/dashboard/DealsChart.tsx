@@ -87,10 +87,12 @@ export const DealsChart = memo(() => {
     <div className="flex flex-col">
       <div className="flex items-center mb-4">
         <div className="mr-3 flex">
-          <DollarSign className="text-muted-foreground w-6 h-6" />
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(76, 175, 80, 0.12)" }}>
+            <DollarSign className="w-4 h-4 text-[#4CAF50]" />
+          </div>
         </div>
-        <h2 className="text-xl font-semibold text-muted-foreground">
-          Upcoming Deal Revenue
+        <h2 className="text-base font-semibold text-foreground">
+          Pipeline Revenue
         </h2>
       </div>
       <div className="h-[400px]">
@@ -98,7 +100,7 @@ export const DealsChart = memo(() => {
           data={months}
           indexBy="date"
           keys={["won", "pending", "lost"]}
-          colors={["#61cdbb", "#97e3d5", "#e25c3b"]}
+          colors={["#4CAF50", "#7C5EE9", "#e94560"]}
           margin={{ top: 30, right: 50, bottom: 30, left: 0 }}
           padding={0.3}
           valueScale={{

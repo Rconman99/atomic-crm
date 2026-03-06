@@ -55,8 +55,6 @@ const ContactShowContentMobile = () => {
 
   return (
     <>
-      {/* We need to repeat the note creation sheet here to support the note 
-      create button that is rendered when there are no notes. */}
       <NoteCreateSheet
         open={noteCreateOpen}
         onOpenChange={setNoteCreateOpen}
@@ -159,7 +157,7 @@ const ContactShowContentMobile = () => {
                   onError: () => {
                     /** override to hide notification as error case is handled by NotesIteratorMobile */
                   },
-                } as any // fixme: remove once https://github.com/marmelab/react-admin/pull/11166 is released
+                } as any
               }
             >
               <NotesIteratorMobile contactId={record.id} showStatus />
@@ -206,17 +204,19 @@ const ContactShowContent = () => {
   if (isPending || !record) return null;
 
   return (
-    <div className="mt-2 mb-2 flex gap-8">
-      <div className="flex-1">
-        <Card>
+    <div className="twenty-detail-layout mt-2 mb-2">
+      {/* Main content - 60% */}
+      <div>
+        <Card className="border border-border shadow-sm">
           <CardContent>
-            <div className="flex">
+            {/* Contact header */}
+            <div className="flex items-start gap-4 mb-6">
               <Avatar />
-              <div className="ml-2 flex-1">
-                <h5 className="text-xl font-semibold">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-2xl font-bold text-foreground">
                   <RecordRepresentation />
-                </h5>
-                <div className="inline-flex text-sm text-muted-foreground">
+                </h1>
+                <div className="text-sm text-muted-foreground mt-1">
                   {record.title}
                   {record.title && record.company_id != null && " at "}
                   {record.company_id != null && (
@@ -231,31 +231,103 @@ const ContactShowContent = () => {
                   )}
                 </div>
               </div>
-              <div>
-                <ReferenceField
-                  source="company_id"
-                  reference="companies"
-                  link="show"
-                  className="no-underline"
-                >
-                  <CompanyAvatar />
-                </ReferenceField>
-              </div>
+              <ReferenceField
+                source="company_id"
+                reference="companies"
+                link="show"
+                className="no-underline"
+              >
+                <CompanyAvatar />
+              </ReferenceField>
             </div>
-            <ReferenceManyField
-              target="contact_id"
-              reference="contact_notes"
-              sort={{ field: "date", order: "DESC" }}
-              empty={
-                <NoteCreate reference="contacts" showStatus className="mt-4" />
-              }
-            >
-              <NotesIterator reference="contacts" showStatus />
-            </ReferenceManyField>
+
+            {/* Tabs for notes, tasks, details */}
+            <Tabs defaultValue="notes" className="w-full">
+              <TabsList className="w-full justify-start border-b border-border bg-transparent p-0 h-auto">
+                <TabsTrigger
+                  value="notes"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--rc-highlight)] data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-2"
+                >
+                  Notes
+                </TabsTrigger>
+                <TabsTrigger
+                  value="tasks"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--rc-highlight)] data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-2"
+                >
+                  <ReferenceManyCount
+                    target="contact_id"
+                    reference="tasks"
+                    filter={{ "done_date@is": null }}
+                  />{" "}
+                  Tasks
+                </TabsTrigger>
+                <TabsTrigger
+                  value="details"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--rc-highlight)] data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-2"
+                >
+                  Details
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="notes" className="mt-4">
+                <ReferenceManyField
+                  target="contact_id"
+                  reference="contact_notes"
+                  sort={{ field: "date", order: "DESC" }}
+                  empty={
+                    <NoteCreate
+                      reference="contacts"
+                      showStatus
+                      className="mt-4"
+                    />
+                  }
+                >
+                  <NotesIterator reference="contacts" showStatus />
+                </ReferenceManyField>
+              </TabsContent>
+
+              <TabsContent value="tasks" className="mt-4">
+                <ContactTasksList />
+              </TabsContent>
+
+              <TabsContent value="details" className="mt-4">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-base font-semibold mb-2">
+                      Personal info
+                    </h3>
+                    <Separator />
+                    <div className="mt-3">
+                      <ContactPersonalInfo />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold mb-2">
+                      Background info
+                    </h3>
+                    <Separator />
+                    <div className="mt-3">
+                      <ContactBackgroundInfo />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold mb-2">Tags</h3>
+                    <Separator />
+                    <div className="mt-3">
+                      <TagsListEdit />
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
-      <ContactAside />
+
+      {/* Activity feed - 40% */}
+      <div>
+        <ContactAside />
+      </div>
     </div>
   );
 };

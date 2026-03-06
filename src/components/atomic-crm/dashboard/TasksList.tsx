@@ -9,14 +9,16 @@ export const TasksList = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center">
         <div className="mr-3 flex">
-          <CheckSquare className="text-muted-foreground w-6 h-6" />
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(124, 94, 233, 0.12)" }}>
+            <CheckSquare className="w-4 h-4 text-[#7C5EE9]" />
+          </div>
         </div>
-        <h2 className="text-xl font-semibold text-muted-foreground flex-1">
+        <h2 className="text-base font-semibold text-foreground flex-1">
           Upcoming Tasks
         </h2>
         <AddTask display="icon" selectContact />
       </div>
-      <Card className="p-4 mb-2">
+      <Card className="p-4 mb-2 border border-border shadow-sm">
         <TasksListContent />
       </Card>
     </div>

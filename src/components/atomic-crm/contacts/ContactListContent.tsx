@@ -16,10 +16,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 
-import { Status } from "../misc/Status";
 import type { Contact } from "../types";
 import { Avatar } from "./Avatar";
 import { TagsList } from "./TagsList";
+
+const statusPillClass: Record<string, string> = {
+  hot: "status-pill status-pill--hot",
+  warm: "status-pill status-pill--warm",
+  cold: "status-pill status-pill--cold",
+  inactive: "status-pill status-pill--inactive",
+};
 
 export const ContactListContent = () => {
   const {
@@ -32,7 +38,6 @@ export const ContactListContent = () => {
   } = useListContext<Contact>();
   const lastSelected = useRef<Identifier | null>(null);
 
-  // Handle shift+click to select a range of rows
   const handleToggleItem = useCallback(
     (id: Identifier, event: MouseEvent) => {
       if (!contacts) return;
@@ -73,7 +78,7 @@ export const ContactListContent = () => {
   }
 
   return (
-    <div className="md:divide-y">
+    <div className="md:divide-y divide-border">
       {contacts.map((contact) => (
         <RecordContextProvider key={contact.id} value={contact}>
           <ContactItemContent
@@ -103,9 +108,9 @@ const ContactItemContent = ({
   const now = Date.now();
 
   return (
-    <div className="flex flex-row items-center pl-2 pr-4 py-2 hover:bg-muted transition-colors first:rounded-t-xl last:rounded-b-xl">
+    <div className="flex flex-row items-center pl-2 pr-4 h-12 hover:bg-muted/50 transition-colors first:rounded-t-xl last:rounded-b-xl">
       <div
-        className="px-4 py-3 flex items-center cursor-pointer"
+        className="px-3 py-2 flex items-center cursor-pointer"
         onClick={(e) => handleToggleItem(contact.id, e)}
       >
         <Checkbox
@@ -115,15 +120,15 @@ const ContactItemContent = ({
       </div>
       <Link
         to={`/contacts/${contact.id}/show`}
-        className="flex-1 flex flex-row gap-4 items-center"
+        className="flex-1 flex flex-row gap-3 items-center min-w-0"
       >
         <Avatar />
         <div className="flex-1 min-w-0">
-          <div className="font-medium">
+          <div className="text-sm font-medium text-foreground">
             {`${contact.first_name} ${contact.last_name ?? ""}`}
           </div>
           {contact.title || contact.company_id != null || contact.nb_tasks ? (
-            <div className="text-sm text-muted-foreground">
+            <div className="text-xs text-muted-foreground truncate">
               {contact.title}
               {contact.title && contact.company_id != null && " at "}
               {contact.company_id != null && (
@@ -143,15 +148,18 @@ const ContactItemContent = ({
             </div>
           ) : null}
         </div>
+        {contact.status && (
+          <span className={statusPillClass[contact.status] ?? "status-pill"}>
+            {contact.status}
+          </span>
+        )}
         {contact.last_seen && (
-          <div className="text-right ml-4">
+          <div className="text-right ml-3 flex-shrink-0">
             <div
-              className="text-sm text-muted-foreground"
+              className="text-xs text-muted-foreground"
               title={contact.last_seen}
             >
-              {"last activity "}
-              {formatRelative(contact.last_seen, now)}{" "}
-              <Status status={contact.status} />
+              {formatRelative(contact.last_seen, now)}
             </div>
           </div>
         )}
@@ -237,13 +245,17 @@ const ContactItemContentMobile = ({ contact }: { contact: Contact }) => (
     <Avatar />
     <div className="flex flex-col grow justify-between">
       <div className="flex-1 min-w-0">
-        <div className="flex justify-between">
-          <div className="font-medium">
+        <div className="flex justify-between items-center">
+          <div className="font-medium text-sm">
             <RecordRepresentation />
           </div>
-          <Status status={contact.status} />
+          {contact.status && (
+            <span className={statusPillClass[contact.status] ?? "status-pill"}>
+              {contact.status}
+            </span>
+          )}
         </div>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           <div className="flex flex-col gap-1">
             <span>
               {contact.title}

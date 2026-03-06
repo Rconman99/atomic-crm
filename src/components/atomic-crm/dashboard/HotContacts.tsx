@@ -34,9 +34,11 @@ export const HotContacts = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center">
         <div className="mr-3 flex">
-          <Users className="text-muted-foreground w-6 h-6" />
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "rgba(233, 69, 96, 0.12)" }}>
+            <Users className="w-4 h-4 text-[#e94560]" />
+          </div>
         </div>
-        <h2 className="text-xl font-semibold text-muted-foreground">
+        <h2 className="text-base font-semibold text-foreground">
           Hot Contacts
         </h2>
         <TooltipProvider>
@@ -57,7 +59,7 @@ export const HotContacts = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
-      <Card className="py-0">
+      <Card className="py-0 border border-border shadow-sm">
         <SimpleList<Contact>
           linkType="show"
           data={contactData}
@@ -79,7 +81,7 @@ export const HotContacts = () => {
               <p className="text-sm mb-4">
                 Contacts with a "hot" status will appear here.
               </p>
-              <p className="text-sm">
+              <p className="text-sm text-muted-foreground">
                 Change the status of a contact by adding a note to that contact
                 and clicking on "show options".
               </p>
