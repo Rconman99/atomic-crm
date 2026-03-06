@@ -1,7 +1,8 @@
 -- RC Digital LLC: Projects Summary View
 -- Aggregates project data with company, deal, analytics, and invoice info
 
-CREATE OR REPLACE VIEW projects_summary AS
+CREATE OR REPLACE VIEW projects_summary
+WITH (security_invoker=on) AS
 SELECT p.*,
   c.name as company_name,
   c.logo as company_logo,
