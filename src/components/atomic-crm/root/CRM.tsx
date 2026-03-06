@@ -52,6 +52,7 @@ import {
   defaultTitle,
 } from "./defaultConfiguration";
 import { i18nProvider } from "./i18nProvider";
+import { identifyUser, resetUser } from "@/providers/posthog";
 import { StartPage } from "../login/StartPage.tsx";
 import { useIsMobile } from "@/hooks/use-mobile.ts";
 import { MobileTasksList } from "../tasks/MobileTasksList.tsx";
@@ -176,6 +177,19 @@ export const CRM = ({
         } catch {
           // Non-critical: config will load via useConfigurationLoader
         }
+        // Identify user in PostHog
+        try {
+          const identity = await authProvider.getIdentity?.();
+          if (identity) {
+            identifyUser({
+              id: identity.id,
+              email: identity.email,
+              fullName: identity.fullName,
+            });
+          }
+        } catch {
+          // Non-critical
+        }
         return result;
       },
       handleCallback: async (params: any) => {
@@ -201,6 +215,7 @@ export const CRM = ({
         } catch {
           // Ignore
         }
+        resetUser();
         return authProvider.logout(params);
       },
     }),

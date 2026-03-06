@@ -5,11 +5,22 @@ import { Error } from "@/components/admin/error";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RefreshButton } from "@/components/admin/refresh-button";
 
+import { useRealtimeSubscriptions } from "@/providers/realtimeProvider";
 import { useConfigurationLoader } from "../root/useConfigurationLoader";
 import { CrmSidebar } from "./CrmSidebar";
 
+const REALTIME_TABLES = [
+  "deals",
+  "projects",
+  "invoices",
+  "contacts",
+  "companies",
+  "tasks",
+];
+
 export const Layout = ({ children }: { children: ReactNode }) => {
   useConfigurationLoader();
+  useRealtimeSubscriptions(REALTIME_TABLES);
   return (
     <>
       <CrmSidebar />
