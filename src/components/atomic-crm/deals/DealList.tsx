@@ -11,6 +11,7 @@ import { SelectInput } from "@/components/admin/select-input";
 
 import { useRealtimeSubscription } from "@/providers/realtimeProvider";
 
+import { CrmErrorBoundary } from "../misc/CrmErrorBoundary";
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import { TopToolbar } from "../layout/TopToolbar";
 import { DealArchivedList } from "./DealArchivedList";
@@ -82,7 +83,9 @@ const DealLayout = () => {
 
   return (
     <div className="w-full">
-      <DealListContent />
+      <CrmErrorBoundary fallbackTitle="Deal pipeline failed to load">
+        <DealListContent />
+      </CrmErrorBoundary>
       <DealArchivedList />
       <DealCreate open={!!matchCreate} />
       <DealEdit open={!!matchEdit && !matchCreate} id={matchEdit?.params.id} />
